@@ -5,6 +5,7 @@
 
 package com.greenvest.admin;
 
+import com.greenvest.security.*;
 import com.greenvest.model.SustainabilityAction;
 import com.greenvest.repo.InMemoryRepository;
 import com.greenvest.service.AdminService;
@@ -36,18 +37,28 @@ public class AdminController {
         // scanner for input
         try (Scanner sc = new Scanner(System.in)) {
 
-            //  ask login details
+        // Interceptor Login
+        InterceptorManager manager = new InterceptorManager();
+        manager.addInterceptor(new LoggingInterceptor());
+        manager.addInterceptor(new AuthenticationInterceptor(adminService.getAdminUser()));
+
+        //  ask login details
         System.out.print("Username: ");
         String username = sc.nextLine();
         System.out.print("Password: ");
         String password = sc.nextLine();
         
 
-        //  verify admin login
-        if (!adminService.login(username, password)) {
+        // Wrap login into a request object
+        LoginRequest request = new LoginRequest(username, password);
+
+        // Process through all interceptors
+        if (!manager.process(request)) {
             System.out.println("Login failed.");
             return;
         }
+    
+        System.out.println("Login successfull");
 
         //  admin menu in loop
         while (true) {

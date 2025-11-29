@@ -22,11 +22,6 @@ public class AdminService {
         this.repo = repo;
     }
 
-    //  verify admin
-    public boolean login(String user, String pass) {
-        return admin.checkLogin(user, pass);
-    }
-
     // actions that are not approved
     public void showPendingActions() {
         for (SustainabilityAction a : repo.getActions()) {
@@ -71,4 +66,11 @@ public class AdminService {
             );
         }
     }
+
+    public AdminUser getAdminUser() {
+    return admin;
+    }
+
+
+
 }

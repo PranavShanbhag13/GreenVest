@@ -5,6 +5,8 @@
 
 package com.greenvest.model;
 
+import java.security.MessageDigest;
+
 public class AdminUser {
 
     // admin user and password
@@ -17,8 +19,24 @@ public class AdminUser {
         this.password = password;
     }
 
-    //  check login
-    public boolean checkLogin(String user, String pass) {
-        return username.equals(user) && password.equals(pass);
+     // OWASP constant-time comparison to prevent timing attacks
+    public boolean safeEquals(String a, String b) {
+        if (a == null || b == null) return false;
+        return MessageDigest.isEqual(a.getBytes(), b.getBytes());
     }
+
+     // Login method (needed for AdminService)
+    public boolean checkLogin(String user, String pass) {
+        return safeEquals(username, user) && safeEquals(password, pass);
+    }
+
+
+    public String getUsername() { 
+        return username;
+    }
+    public String getPassword() {
+        return password; 
+    }
+
+    
 }
