@@ -3,7 +3,6 @@
 // check whether credit is active or expired
 
 package com.greenvest.model;
-
 import java.time.LocalDate;
 
 public class Credit {
